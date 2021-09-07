@@ -10,7 +10,7 @@ router.use('/Comment', commentsRoutes);
 
 
 router.get('/', (req, res) => {
-    res.send("Hello World!")
+    res.send("Hello World! Thank you for everything.")
 });
 
 router.use((res, req) => {
