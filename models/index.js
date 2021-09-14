@@ -1,26 +1,25 @@
-const User = require ('./User');
-const Post = require ('./Post');
-const Vote = require('./Vote');
-const Comment = require('./Comment');
+const User = require('./user');
+const Post = require('./post');
+const Comment = require('./comment');
+const Vote = require('./vote')
 
 User.hasMany(Post, {
-    foreignKey: 'user_id',
-    onDelete: 'SET NULL'
+    foreignKey: 'user_id'
 });
 
 Post.belongsTo(User, {
     foreignKey: 'user_id',
-    onDelete: 'SET NULL'
+    onDelete: 'cascade'
 });
 
 User.belongsToMany(Post, {
     foreignKey: 'user_id',
-    onDelete: 'SET NULL'
+    onDelete: 'cascade'
 });
-  
+
 Post.belongsToMany(User, {
     foreignKey: 'post_id',
-    onDelete: 'SET NULL'
+    onDelete: 'cascade'
 });
 
 Vote.belongsTo(User, {
@@ -32,34 +31,23 @@ Vote.belongsTo(Post, {
     onDelete: 'SET NULL'
 });
 
-User.hasMany(Vote, {
-    foreignKey: 'user_id',
-    onDelete: 'SET NULL'
-});
-
-Post.hasMany(Vote, {
-    foreignKey: 'post_id',
-    onDelete: 'SET NULL'
-});
-
 Comment.belongsTo(User, {
-   foreignKey: 'user_id',
-   onDelete: 'SET NULL'
+    foreignKey: 'user_id',
+    onDelete: 'cascade'
 });
-  
+
 Comment.belongsTo(Post, {
     foreignKey: 'post_id',
-    onDelete: 'SET NULL'
-});
-  
-User.hasMany(Comment, {
-    foreignKey: 'user_id',
-    onDelete: 'SET NULL'
-});
-  
-Post.hasMany(Comment, {
-    foreignKey: 'post_id',
-    onDelete: 'SET NULL'
+    onDelete: 'cascade'
 });
 
-module.exports = { User, Post, Vote, Comment };
+User.hasMany(Comment, {
+    foreignKey: 'user_id',
+    onDelete: 'cascade'
+});
+
+Post.hasMany(Comment, {
+    foreignKey: 'post_id',
+    onDelete: 'cascade'
+})
+module.exports = { User, Post, Comment };
