@@ -1,36 +1,35 @@
 {
-  "name": "new-tech-news",
+  "name": "new_tech_news",
   "version": "1.0.0",
   "description": "Any Kind of Tech News",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "develop": "nodemon server.js"
+      "test": "jest",
+      "start": "node server.js",
+      "seed": "node seeds/index.js"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ktodoran/New-Tech-News.git"
+      "type": "git",
+      "url": "https://github.com/ktodoran/New-Tech-News"
   },
-  "keywords":[],
-  "author": "",
-  "license": "ISC",
+  "author": "Kyle Todoran",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ktodoran/New-Tech-News#issues"
+      "url": "https://github.com/ktodoran/New-Tech-News/issues"
   },
-  "homepage": "https://github.com/ktodoran/New-Tech-News#README",
+  "homepage": "https://github.com/ktodoran/New-Tech-News#readme",
   "dependencies": {
-    "bcrypt": "^5.0.1",
-    "connect-session-sequelize": "^7.1.1",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "express-handlebars": "^5.3.3",
-    "express-session": "1.17.2",
-    "mysql2": "^2.3.0",
-    "nodemon": "^2.0.12",
-    "sequelize": "^6.6.5"
+      "bcrypt": "^5.0.0",
+      "connect-session-sequelize": "^6.1.1",
+      "dotenv": "^8.2.0",
+      "express": "^4.17.1",
+      "express-handlebars": "^4.0.4",
+      "express-session": "^1.17.1",
+      "mysql2": "^2.1.0",
+      "sequelize": "^5.21.12"
   },
   "devDependencies": {
-    "jest":"27.0.6"
+      "jest": "^26.4.2",
+      "nodemon": "^2.0.4"
   }
 }
