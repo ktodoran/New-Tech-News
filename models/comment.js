@@ -10,7 +10,7 @@ Comment.init(
             primaryKey: true,
             autoIncrement: true
         },
-        comment_Text: {
+        comment_text: {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
@@ -22,7 +22,7 @@ Comment.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'User',
+                model: 'user',
                 key: 'id'
             }
         },
@@ -31,7 +31,7 @@ Comment.init(
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Post',
+                model: 'post',
                 key: 'id'
             }
         }
@@ -40,8 +40,8 @@ Comment.init(
         sequelize,
         freezeTableName: true,
         underscored: true,
-        modelName: 'Comment'
+        modelName: 'comment'
     }
 );
 
-module.exports - Comment;
+module.exports = Comment;

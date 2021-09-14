@@ -3,19 +3,35 @@ const sequelize = require('../config/connection');
 
 class Post extends Model {
     static voteUp(body, models) {
-        return models.voteUp.create({
-            where: {
-                id: body.post_id
-            },
-            attributes: [
-                'id',
-                'post_url',
-                'title',
-                'created_at',
-                [sequelize.literal('SELECT COUNT(*) FROM vote WHERE post_id)'), 'vote count']
-            ]
-        });
-    };
+        return models.Vote.create({
+                user_id: body.user_id,
+                post_id: body.post_id
+            })
+            .then(() => {
+                return Post.findOne({
+                    where: {
+                        id: body.post_id
+                    },
+                    attributes: [
+                        'id',
+                        'post_url',
+                        'title',
+                        'created_at',
+                        [sequelize.literal('SELECT COUNT(*) FROM vote WHERE post_id)'), 'vote count']
+                    ],
+                    include: [
+                        {
+                            model: models.Comment,
+                            attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                            include: {
+                                model: models.User,
+                                attributes: ['username']
+                            }
+                        }
+                    ]
+                });
+            });
+    }
 }
 
 Post.init(
@@ -40,7 +56,7 @@ Post.init(
         user_id: {
             type: DataTypes.INTEGER,
             references: {
-                model: 'User',
+                model: 'user',
                 key: 'id'
             }
         }
@@ -49,7 +65,7 @@ Post.init(
         sequelize,
         freezeTableName: true,
         underscored: true,
-        modelName: 'Post'
+        modelName: 'post'
     }
 );
 
