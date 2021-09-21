@@ -2,9 +2,9 @@
 async function editFormHandler(event) {
     event.preventDefault();
 
-    const title = document.querySelector('input[name="post-title"]').value.trim();
+    const tech_title = document.querySelector('input[name="post-title"]').value.trim();
     const content = document.querySelector('input[name="content"]').value.trim();
-    console.log(title);
+    console.log(tech_title);
     console.log(content);
 
     const id = window.location.toString().split('/')[
@@ -15,7 +15,7 @@ async function editFormHandler(event) {
         method: 'PUT',
         body: JSON.stringify({
             post_id: id,
-            title,
+            tech_title,
             content
         }),
         headers: {
