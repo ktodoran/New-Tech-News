@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const sequelize = require('../config/connection');
 const { Post, User, Comment } = require('../models');
-const withAuth = require('../utils/auth');
+const withAuthorization = require('../utils/auth');
 
-router.get('/', withAuth, (req, res) => {
+router.get('/', withAuthorization, (req, res) => {
     Post.findAll({
         where: {
             user_id: req.session.user_id
@@ -16,7 +16,7 @@ router.get('/', withAuth, (req, res) => {
         ],
         include: [{
             model: Comment,
-            attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+            attributes: ['id', 'commentText', 'post_id', 'user_id', 'created_at'],
             include: {
                 model: User,
                 attributes: ['username']
@@ -37,7 +37,7 @@ router.get('/', withAuth, (req, res) => {
             res.status(500).json(err);
         });
 });
-router.get('/edit/:id', withAuth, (req, res) => {
+router.get('/edit/:id', withAuthorization, (req, res) => {
     Post.findOne({
         where: {
             id: req.params.id
@@ -53,7 +53,7 @@ router.get('/edit/:id', withAuth, (req, res) => {
         },
         {
             model: Comment,
-            attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+            attributes: ['id', 'commentText', 'post_id', 'user_id', 'created_at'],
             include: {
                 model: User,
                 attributes: ['username']
@@ -63,7 +63,7 @@ router.get('/edit/:id', withAuth, (req, res) => {
     })
         .then(dbPostData => {
             if (!dbPostData) {
-                res.status(404).json({ message: 'No post found with this id' });
+                res.status(404).json({ message: 'There is no Post associated with this id' });
                 return;
             }
 
@@ -75,10 +75,9 @@ router.get('/edit/:id', withAuth, (req, res) => {
             res.status(500).json(err);
         });
 })
+
 router.get('/new', (req, res) => {
     res.render('new-post');
 });
-
-
 
 module.exports = router;
