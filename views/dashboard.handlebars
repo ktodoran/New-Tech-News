@@ -16,14 +16,14 @@
 
 {{#if posts.length}}
 <section>
-	<h2>My Posts</h2>
-	<ol>
-		{{#each posts as |post|}}
-		<li>
-		<a href="/dashboard/edit/{{post.id}}" class="edit-link">Edit Post</a>
-		</li>
-		{{/each}}
-	</ol>
+  <h2>My Posts</h2>
+  <ol>
+    {{#each posts as |post|}}
+    <li>
+      <a href="/dashboard/edit/{{post.id}}" class="edit-link">Edit Post</a>
+    </li>
+    {{/each}}
+  </ol>
 </section>
 {{/if}}
 

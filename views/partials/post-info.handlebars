@@ -1,9 +1,19 @@
-<article class="blog">
-  <div class="title">
-    <a href="{{tech_body}}" target="_blank">{{tech_title}}</a>
-    <span>({{format_url tech_body}})</span>
-  </div>
-  <div class="meta">
-    <a href="/post/{{id}}">{{comments.length}} {{format_plural "comment" comments.length}}</a>
-  </div>
+<div class="card mb-6">
+	<header class="card-title bg-primary">
+		<div class="column">
+			<a href="/post/{{id}}">{{title}}</a>
+		</div>
+		<div class="username-post">
+			Created By: {{user.username}} on {{format_date created_at}}
+		</div>
+	</header>
+	<div class="card-body mb-6 bg-secondary">
+		<p class="card-text">{{post_content}}</p>
+	</div>
+
+</div>
+<article class="post">
+	<div>
+		<a href="/post/{{id}}">{{comments.length}} {{format_plural "comment" comment.length}}</a>
+	</div>
 </article>
