@@ -44,7 +44,7 @@ router.get('/:id', (req, res) => {
     })
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'There is no User associated with this id' });
+                res.status(404).json({ message: 'No User with that ID!' });
                 return;
             }
             res.json(dbUserData);
@@ -55,20 +55,17 @@ router.get('/:id', (req, res) => {
         });
 });
 
-
 router.post('/', (req, res) => {
 
     User.create({
         username: req.body.username,
         password: req.body.password
     })
-
         .then(dbUserData => {
             req.session.save(() => {
                 req.session.user_id = dbUserData.id;
                 req.session.username = dbUserData.username;
                 req.session.loggedIn = true;
-
                 res.json(dbUserData);
             });
         })
@@ -85,7 +82,7 @@ router.post('/login', (req, res) => {
         }
     }).then(dbUserData => {
         if (!dbUserData) {
-            res.status(400).json({ message: 'Username does not exist!' });
+            res.status(400).json({ message: 'Username Not Found!' });
             return;
         }
         const subsequentPass = dbUserData.checkPassword(req.body.password);
@@ -95,7 +92,6 @@ router.post('/login', (req, res) => {
             return;
         }
         req.session.save(() => {
-
             req.session.user_id = dbUserData.id;
             req.session.username = dbUserData.username;
             req.session.loggedIn = true;
@@ -120,7 +116,6 @@ router.post('/logout', (req, res) => {
 });
 
 router.put('/:id', (req, res) => {
-
     User.update(req.body, {
         individualHooks: true,
         where: {
@@ -129,7 +124,7 @@ router.put('/:id', (req, res) => {
     })
         .then(dbUserData => {
             if (!dbUserData[0]) {
-                res.status(404).json({ message: 'There is no User associated with this id' });
+                res.status(404).json({ message: 'No User with that ID!' });
                 return;
             }
             res.json(dbUserData);
@@ -148,7 +143,7 @@ router.delete('/:id', (req, res) => {
     })
         .then(dbUserData => {
             if (!dbUserData) {
-                res.status(404).json({ message: 'There is no User associated with this id' });
+                res.status(404).json({ message: 'No User with that ID!' });
                 return;
             }
             res.json(dbUserData);

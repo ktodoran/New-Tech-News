@@ -1,82 +1,31 @@
 const router = require('express').Router();
-const { Post, User, Comment } = require('../../models');
-const withAuthorization = require('../../utils/auth');
 const sequelize = require('../../config/connection');
+const { Post, User, Comment } = require('../../models');
+const withAuth = require('../../utils/auth');
 
 router.get('/', (req, res) => {
-    console.log('====================')
     Post.findAll({
+        order: [['created_at', 'DESC']],
         attributes: [
             'id',
-            'title',
-            'content',
-            'created_at'
-        ],
-        order: [
-            ['created_at', 'DESC']
-        ],
-        include: [{
-            model: User,
-            attributes: ['username']
-        },
-        {
-            model: Comment,
-            attributes: ['id', 'commentText', 'post_id', 'user_id', 'created_at'],
-            include: {
-                model: User,
-                attributes: ['username']
-            }
-        }
-        ]
-    })
-        .then(dbPostsData => res.json(dbPostsData.reverse()))
-        .catch(err => {
-            console.log(err)
-            res.status(500).json(err);
-        });
-});
-router.get('/:id', (req, res) => {
-    Post.findOne({
-        where: {
-            id: req.params.id
-        },
-        attributes: ['id',
-            'content',
+            'post_content',
             'title',
             'created_at'
         ],
-        include: [{
-            model: User,
-            attributes: ['username']
-        },
-        {
-            model: Comment,
-            attributes: ['id', 'commentText', 'post_id', 'user_id', 'created_at'],
-            include: {
+        include: [
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
+            {
                 model: User,
                 attributes: ['username']
             }
-        }
         ]
-    })
-        .then(dbPostData => {
-            if (!dbPostData) {
-                res.status(404).json({ message: 'There is no post associated with this id' });
-                return;
-            }
-            res.json(dbPostData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json(err);
-        });
-});
-
-router.post('/', withAuthorization, (req, res) => {
-    Post.create({
-        title: req.body.title,
-        content: req.body.content,
-        user_id: req.session.user_id
     })
         .then(dbPostData => res.json(dbPostData))
         .catch(err => {
@@ -85,19 +34,35 @@ router.post('/', withAuthorization, (req, res) => {
         });
 });
 
-router.put('/:id', withAuthorization, (req, res) => {
-    Post.update({
-        title: req.body.title,
-        content: req.body.content
-    },
-        {
-            where: {
-                id: req.params.id
+router.get('/:id', (req, res) => {
+    Post.findOne({
+        where: {
+            id: req.params.id
+        },
+        attributes: [
+            'id',
+            'post_content',
+            'title',
+            'created_at'
+        ],
+        include: [
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
+            },
+            {
+                model: User,
+                attributes: ['username']
             }
-        })
+        ]
+    })
         .then(dbPostData => {
             if (!dbPostData) {
-                res.status(404).json({ message: 'There is no post associated with this id' });
+                res.status(404).json({ message: 'No Post with that ID!' });
                 return;
             }
             res.json(dbPostData);
@@ -108,19 +73,61 @@ router.put('/:id', withAuthorization, (req, res) => {
         });
 });
 
-router.delete('/:id', withAuthorization, (req, res) => {
+router.post('/', withAuth, (req, res) => {
+    if (req.session) {
+        Post.create({
+            title: req.body.title,
+            user_id: req.body.user_id,
+            user_id: req.session.user_id,
+            post_content: req.body.post_content
+        })
+            .then(dbPostData => res.json(dbPostData))
+            .catch(err => {
+                console.log(err);
+                res.status(400).json(err);
+            });
+    }
+});
+
+router.put('/:id', withAuth, (req, res) => {
+    Post.update(
+        {
+            title: req.body.title
+        },
+        {
+            where: {
+                id: req.params.id
+            }
+        }
+    )
+        .then(dbPostData => {
+            if (!dbPostData) {
+                res.status(404).json({ message: 'No Post with that ID!' });
+                return;
+            }
+            res.json(dbPostData);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json(err);
+        });
+});
+
+router.delete('/:id', withAuth, (req, res) => {
     Post.destroy({
-        where: {
+        where:
+        {
             id: req.params.id
         }
     })
         .then(dbPostData => {
             if (!dbPostData) {
-                res.status(404).json({ message: 'There is no post associated with this id' });
+                res.status(404).json({ message: "No Post with that ID!" });
                 return;
             }
             res.json(dbPostData);
-        }).catch(err => {
+        })
+        .catch(err => {
             console.log(err);
             res.status(500).json(err);
         });
